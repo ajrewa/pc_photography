@@ -1,0 +1,64 @@
+{
+  "hero": [
+    {
+      "slug": "arya-federico",
+      "couple": "Arya & Federico",
+      "location": "Lake Como, Italy",
+      "date": "June 2025",
+      "teaser": "When a supermodel married her Italian stallion on a horse ranch outside Milan, it was so dreamy that they had to have two ceremonies just to fit everyone in.",
+      "category": "Destination",
+      "image": "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2000&auto=format&fit=crop",
+      "videoUrl": "",
+      "videoType": "file"
+    }
+  ],
+  "films": [
+    {
+      "slug": "arya-federico",
+      "couple": "Arya & Federico",
+      "location": "Lake Como, Italy",
+      "date": "June 2025",
+      "teaser": "A cinematic celebration on the lake.",
+      "category": "Destination",
+      "image": "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2000&auto=format&fit=crop",
+      "thumbnail": "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop",
+      "videoUrl": "https://www.youtube.com/embed/3hq_DhGOzik",
+      "videoType": "youtube"
+    },
+    {
+      "slug": "akshay-riya",
+      "couple": "Akshay & Riya",
+      "location": "Udaipur, India",
+      "date": "February 2025",
+      "teaser": "Turmeric, marigolds, and a lake palace at golden hour.",
+      "category": "Indian",
+      "image": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=2000&auto=format&fit=crop",
+      "thumbnail": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1200&auto=format&fit=crop",
+      "videoUrl": "https://www.youtube.com/embed/3hq_DhGOzik",
+      "videoType": "youtube"
+    }
+  ],
+  "india": [
+    {
+      "id": "film_001",
+      "couple": "RAKUL & JACKKY",
+      "slug": "rakul-jackky",
+      "location": "Goa",
+      "city": "Panaji",
+      "state": "Goa",
+      "date": "April 2025",
+      "latitude": 15.4909,
+      "longitude": 73.8278,
+      "image": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1200&auto=format&fit=crop",
+      "filmUrl": "/films/rakul-jackky"
+    }
+  ],
+  "gratitude": [
+    {
+      "quote": "We forgot the cameras were even there until we saw the film and cried for twenty minutes straight.",
+      "author": "Priya & Raghav",
+      "role": "PC Bride",
+      "image": "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1600&auto=format&fit=crop"
+    }
+  ]
+}
