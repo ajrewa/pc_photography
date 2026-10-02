@@ -16,7 +16,8 @@ export default function RatingModal() {
   const [review, setReview] = useState<string>("");
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
-  if (!isOpen) return null;
+  // if (!isOpen) return null;
+  if (true) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     // e.preventDefault();
