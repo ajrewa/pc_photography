@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import SmoothScroll from "@/components/SmoothScroll";
 import VideoFooter from "@/components/VideoFooter";
 import MainNav from "@/components/MainNav";
+import ReviewPrompt from "@/components/ReviewPrompt";
 import { Provider } from "react-redux";
 import { store } from "@/lib/store";
 
@@ -20,6 +21,7 @@ export default function ClientProviders({
         <Provider store={store}>
         <SmoothScroll>
             {!isAboutUs && !isAdmin && <MainNav isAdmin={isAdmin} />}
+            {!isAdmin && <ReviewPrompt />}
             <div className={isAboutUs || isAdmin ? "" : "lg:pl-[200px]"}>
             {/* <div > */}
                 <main>{children}</main>

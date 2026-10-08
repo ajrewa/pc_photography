@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { cleanJson, required } from "./cleanJson.js";
 
-/** "Films we can't stop watching" grid on the home page, and the /films/watch/[slug] page. */
+/** Films shown on the home page and their /films/[slug] pages. */
 const filmSchema = new mongoose.Schema(
   {
     slug: { type: String, required: required("Slug"), unique: true, lowercase: true, trim: true },

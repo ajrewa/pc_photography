@@ -6,14 +6,11 @@ import SectionHeading from "@/components/SectionHeading";
 import NotesOfGratitude from "@/components/NotesOfGratitude";
 import FilmReelDivider from "@/components/FilmReelDivider";
 import FeatureFilms from "@/components/FeatureFilms";
-import type { SiteContent } from "@/lib/content";
-import ReviewSubmit from "@/components/Review";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchContent } from "@/lib/store/contentSlice";
 import HeroCarousel from "@/components/home/HeroCarousel";
 import AroundIndia from "@/components/home/AroundIndia";
-import RatingModal from "@/components/common/Rating";
 
 export default function HomePage() {
   const dispatch = useAppDispatch();
@@ -169,8 +166,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <ReviewSubmit />
-      
     </div>
   );
 }

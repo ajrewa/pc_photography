@@ -115,7 +115,7 @@ export default function MainNav({ isAdmin }: { isAdmin: boolean }) {
               NAVIGATION
           ================================================== */}
 
-          <nav className="mt-12 space-y-2">
+          <nav className="mt-12 max-h-[calc(100vh-350px)] space-y-2 overflow-y-auto pr-1">
             {navItems.map((item, index) => {
               const Icon = item.icon;
               const active = isActive(item.href);

@@ -212,7 +212,7 @@ export default function DefaultBanner({ slides }: { slides?: ContentFilm[] }) {
               {slide.teaser}
             </p>
             <Link
-              href={`/films/watch/${slide.slug}`}
+              href={`/films/${encodeURIComponent(slide.slug)}`}
               className="mt-4 inline-block border-b border-paper/50 pb-0.5 text-sm font-medium text-paper transition-colors hover:border-ember hover:text-ember"
             >
               Watch the film

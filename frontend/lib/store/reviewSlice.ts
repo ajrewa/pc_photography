@@ -11,8 +11,8 @@ type ReviewState = ReviewPayload & {
 const initialState: ReviewState = {
   author: "",
   image: "",
-  order: "",
   quote: "",
+  rating: 0,
   role: "bride",
   submitting: false,
   uploading: false,
@@ -27,7 +27,7 @@ const reviewSlice = createSlice({
   name: "review",
   initialState,
   reducers: {
-    setField: (state, action: PayloadAction<{ field: keyof ReviewPayload; value: string }>) => {
+    setField: (state, action: PayloadAction<{ field: "author" | "image" | "quote" | "role"; value: string }>) => {
       state[action.payload.field] = action.payload.value;
       state.error = "";
     },

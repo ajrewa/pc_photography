@@ -43,8 +43,15 @@ export default function NotesOfGratitude({ notes }: Props) {
           align="center"
         />
 
-        <div className="mt-12 grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
+        <div className={`mt-12 grid gap-10 ${active.image ? "lg:grid-cols-2 lg:items-center lg:gap-16" : "mx-auto max-w-3xl"}`}>
           <div className="text-center lg:text-left">
+            {active.rating && (
+              <p className="mb-4 flex justify-center gap-1 lg:justify-start" aria-label={`${active.rating} out of 5 stars`}>
+                {Array.from({ length: 5 }, (_, i) => (
+                  <span key={i} className={i < (active.rating ?? 0) ? "text-ember" : "text-stone-light"} aria-hidden="true">★</span>
+                ))}
+              </p>
+            )}
             <p className="font-ital text-xl italic leading-relaxed text-ink sm:text-2xl">
               {active.quote}
             </p>
@@ -58,15 +65,17 @@ export default function NotesOfGratitude({ notes }: Props) {
             </p>
           </div>
 
-          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl">
-            <Image
-              src={active.image}
-              alt={active.author}
-              fill
-              sizes="(min-width: 1024px) 45vw, 90vw"
-              className="object-cover transition-opacity duration-500"
-            />
-          </div>
+          {active.image && (
+            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl">
+              <Image
+                src={active.image}
+                alt={active.author}
+                fill
+                sizes="(min-width: 1024px) 45vw, 90vw"
+                className="object-cover transition-opacity duration-500"
+              />
+            </div>
+          )}
         </div>
 
         {safeNotes.length > 1 && (

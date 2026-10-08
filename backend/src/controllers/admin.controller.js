@@ -99,7 +99,7 @@ export const createItem = asyncHandler(async (req, res) => {
       data.slug = await uniqueSlug(section.Model, slugify(data[section.slugSource]));
     }
     if (section.Model.schema.path("filmUrl") && !data.filmUrl) {
-      data.filmUrl = `/films/watch/${data.slug}`;
+      data.filmUrl = "/films";
     }
   }
 

@@ -3,8 +3,8 @@ import { API_URL } from "@/lib/api";
 export type ReviewPayload = {
   author: string;
   image: string;
-  order: string;
   quote: string;
+  rating: number;
   role: string;
 };
 

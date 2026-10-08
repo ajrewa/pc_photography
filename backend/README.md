@@ -78,6 +78,8 @@ Everything returns JSON. Errors look like
 | --- | --- | --- |
 | GET | `/api/content` | `{ hero: [], films: [], india: [], gratitude: [] }`, what the site renders |
 | GET | `/api/health` | Server, database and storage status |
+| POST | `/api/reviews` | Submit a review with `author`, `role`, `quote`, and a 1–5 `rating`; `image` is optional |
+| POST | `/api/reviews/upload` | Upload an optional review image (`multipart/form-data`, field `file`) |
 
 ### Admin (header `x-admin-passcode` required)
 
@@ -97,14 +99,14 @@ Fields per section:
 - **hero**: `couple, location, date, teaser, category, image, videoUrl?, slug?, order?`
 - **films**: `couple, location, date, teaser, category, image, thumbnail?, videoUrl?, slug?, order?`
 - **india**: `couple, location, city, state, date, latitude, longitude, image, filmUrl?, slug?, order?`
-- **gratitude**: `quote, author, role, image, order?`
+- **gratitude**: `quote, author, role, image?, rating?, order?`
 
 Notes:
 
 - `slug` is generated from `couple` when left out (`"Arya & Federico"` becomes `arya-federico`).
 - `videoUrl` accepts an uploaded file URL or a YouTube/Vimeo link. The API works out
   `videoType` and converts share links to embed URLs.
-- `india.filmUrl` defaults to `/films/watch/<slug>`.
+- `india.filmUrl` defaults to `/films`.
 - Items are returned sorted by `order` (lowest first), then newest first.
 - Uploads accept JPG, PNG, WebP, GIF, AVIF, MP4, WebM and MOV, up to `MAX_UPLOAD_MB` (default 500).
 

@@ -9,7 +9,7 @@ const router = Router();
 
 // Public: everything the website needs to render.
 router.get("/content", getContent);
-router.post("/reviews", submitReview);
+router.post("/reviews", publicReviewLimiter, submitReview);
 router.post("/reviews/upload", publicReviewLimiter, uploadImageSingle, uploadReviewImage);
 
 export default router;

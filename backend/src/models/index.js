@@ -45,9 +45,9 @@ export const SECTIONS = {
   gratitude: {
     label: "Gratitude notes",
     Model: GratitudeNote,
-    fields: ["quote", "author", "role", "image", "order"],
+    fields: ["quote", "author", "role", "image", "rating", "order"],
     mediaFields: ["image"],
-    numberFields: ["order"],
+    numberFields: ["rating", "order"],
     slugSource: null,
     hasVideo: false,
   },

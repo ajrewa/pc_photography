@@ -78,10 +78,11 @@ export type IndiaFilm = {
 export type GratitudeNote = {
   id?: string;
   order?: number;
+  rating?: number;
   quote: string;
   author: string;
   role: string;
-  image: string;
+  image?: string;
 };
 
 export type SiteContent = {
@@ -90,4 +91,3 @@ export type SiteContent = {
   india: IndiaFilm[];
   gratitude: GratitudeNote[];
 };
-
