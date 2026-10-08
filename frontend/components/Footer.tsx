@@ -1,93 +1,102 @@
-import Link from "next/link";
-import { Instagram, Youtube, Facebook } from "lucide-react";
-import { navItems, faqItem } from "@/lib/nav";
+"use client";
+
+import { ArrowRight } from "lucide-react";
 
 export default function Footer() {
-  return null
   return (
-    <footer className="relative overflow-hidden bg-ink px-5 pb-32 pt-20 text-paper sm:px-10 lg:px-16 lg:pb-20">
-      {/* Background Video */}
+    <footer className="relative mx-4 mb-4 min-h-[520px] overflow-hidden rounded-[28px] bg-black text-white sm:mx-6 lg:min-h-[650px]">
+      {/* Background video */}
       <video
+        className="absolute inset-0 h-full w-full object-cover"
+        src="/87806-601467089.mp4"
         autoPlay
         muted
         loop
         playsInline
-        className="absolute inset-0 h-full w-full object-cover"
-      >
-        <source src="/87806-601467089.mp4" type="video/mp4" />
-      </video>
+        preload="metadata"
+      />
 
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-ink/80" />
+      <div className="absolute inset-0 bg-black/40" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80" />
+      
+      <div className="relative z-10 flex min-h-[520px] flex-col justify-end p-5 sm:min-h-[650px] sm:p-8 lg:p-10">
+        
+        {/* CTA */}
+        <div className="mb-8 flex justify-center">
+          <a
+            href="#contact"
+            className="group flex items-center gap-3 rounded-full bg-white px-7 py-4 text-sm font-medium text-black shadow-xl transition-all duration-300 hover:scale-105 hover:bg-neutral-100"
+          >
+            Enquire Now
 
-      {/* Footer Content */}
-      <div className="relative z-10">
-        <div className="grid gap-12 border-b border-white/10 pb-14 lg:grid-cols-[1.3fr_1fr_1fr]">
-          <div>
-            <span className="font-script text-3xl text-paper">
-              PC Photography
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-black text-white transition-transform duration-300 group-hover:translate-x-1">
+              <ArrowRight size={15} />
             </span>
+          </a>
+        </div>
 
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-stone-light">
-              Cinematic wedding films for couples who want their story told
-              with patience, light, and a little bit of nerve. Based everywhere
-              the next flight is going.
+        {/* Information panel */}
+        <div
+          id="contact"
+          className="grid grid-cols-1 gap-7 rounded-[24px] border border-white/10 px-6 py-7 backdrop-blur-md sm:grid-cols-3 sm:items-center sm:px-10"
+        >
+          {/* Phone */}
+          <div className="text-center sm:text-left">
+            <p className="mb-2 text-xs font-medium tracking-wide text-white/50">
+              Phone
             </p>
 
-            <div className="mt-6 flex gap-3">
-              {[Instagram, Youtube, Facebook].map((Icon, i) => (
-                <a
-                  key={i}
-                  href="#"
-                  aria-label="Social link"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-stone-light transition-colors hover:border-ember hover:text-ember"
-                >
-                  <Icon size={16} />
-                </a>
-              ))}
-            </div>
+            <a
+              href="tel:+916263908164"
+              className="text-sm text-white/80 transition hover:text-white"
+            >
+              +91 7745934522
+              <br />
+              +91 8225078977
+            </a>
           </div>
 
-          <div>
-            <p className="eyebrow text-xs font-medium uppercase text-stone">
-              Explore
+          {/* Studio */}
+          <div className="text-center">
+            <p className="mb-2 text-xs font-medium tracking-wide text-white/50">
+              The Studio
             </p>
 
-            <ul className="mt-4 space-y-3 text-sm text-stone-light">
-              {[...navItems, faqItem].map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="transition-colors hover:text-paper"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <p className="mx-auto max-w-md text-sm leading-6 text-white/80">
+              Astha Bungalow no.30, JP Rd, Tejaji Nagar Part 2,
+              <br className="hidden sm:block" />
+              Indore, Madhya Pradesh 452001, India
+            </p>
           </div>
 
-          <div>
-            <p className="eyebrow text-xs font-medium uppercase text-stone">
-              Get in touch
+          {/* Email */}
+          <div className="text-center sm:text-right">
+            <p className="mb-2 text-xs font-medium tracking-wide text-white/50">
+              Email
             </p>
 
-            <ul className="mt-4 space-y-3 text-sm text-stone-light">
-              <li>hello@theweddingfilmer.com</li>
-              <li>+91 98765 43210</li>
-              <li>Mumbai &middot; Available worldwide</li>
-            </ul>
+            <a
+              href="mailto:info@photography.co.in"
+              className="text-sm text-white/80 transition hover:text-white"
+            >
+              info@photography.co.in
+            </a>
           </div>
         </div>
 
-        <div className="flex flex-col items-start justify-between gap-4 pt-8 text-xs text-stone sm:flex-row sm:items-center">
+        {/* Developer Credit */}
+        <div className="mt-6 flex flex-col items-center justify-between gap-2 border-t border-white/10 pt-4 text-xs text-white/50 sm:flex-row">
+          <p>© {new Date().getFullYear()} Photography Studio. All rights reserved.</p>
           <p>
-            &copy; {new Date().getFullYear()} PC Photography. All rights
-            reserved.
-          </p>
-
-          <p>
-            Designed for couples who elope, marry big, and everything between.
+            Designed & Developed by{" "}
+            <a
+              href="https://www.linkedin.com/in/ajay-rewapati-8a3011228/?isSelfProfile=true" // Replace with your portfolio or profile link
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-white/80 underline decoration-white/30 underline-offset-4 transition hover:text-white hover:decoration-white"
+            >
+              ajax
+            </a>
           </p>
         </div>
       </div>

@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import SectionHeading from "@/components/SectionHeading";
 import { ArrowRight, CalendarDays, MapPin, Phone } from "lucide-react";
 
-const WHATSAPP_NUMBER = "916263908164";
-const PHONE_NUMBER = "+916263908164";
+const WHATSAPP_NUMBER = "+917745934522";
+const PHONE_NUMBER = "+917745934522";
 
 export default function ContactPage() {
   useEffect(() => {
@@ -265,7 +265,7 @@ Thank you!`;
                 hover:text-black
               "
             >
-              +91 62639 08164
+              +91 77459 34522
             </a>
           </div>
 
@@ -296,7 +296,7 @@ Thank you!`;
                 hover:decoration-black/50
               "
             >
-              hello@theweddingfilmer.com
+              hello@.com
             </a>
           </div>
         </div>
@@ -358,10 +358,9 @@ Thank you!`;
                   transition
                   placeholder:text-stone
                   focus:bg-white
-                  ${
-                    errors.names
-                      ? "border-red-400"
-                      : "border-black/10 focus:border-ember"
+                  ${errors.names
+                    ? "border-red-400"
+                    : "border-black/10 focus:border-ember"
                   }
                 `}
               />
@@ -422,10 +421,9 @@ Thank you!`;
                     outline-none
                     transition
                     focus:bg-white
-                    ${
-                      errors.date
-                        ? "border-red-400"
-                        : "border-black/10 focus:border-ember"
+                    ${errors.date
+                      ? "border-red-400"
+                      : "border-black/10 focus:border-ember"
                     }
                   `}
                 />
@@ -490,10 +488,9 @@ Thank you!`;
                   transition
                   placeholder:text-stone
                   focus:bg-white
-                  ${
-                    errors.location
-                      ? "border-red-400"
-                      : "border-black/10 focus:border-ember"
+                  ${errors.location
+                    ? "border-red-400"
+                    : "border-black/10 focus:border-ember"
                   }
                 `}
               />
@@ -545,10 +542,9 @@ Thank you!`;
                 transition
                 placeholder:text-stone
                 focus:bg-white
-                ${
-                  errors.mobile
-                    ? "border-red-400"
-                    : "border-black/10 focus:border-ember"
+                ${errors.mobile
+                  ? "border-red-400"
+                  : "border-black/10 focus:border-ember"
                 }
               `}
             />
@@ -602,10 +598,9 @@ Thank you!`;
                 transition
                 placeholder:text-stone
                 focus:bg-white
-                ${
-                  errors.description
-                    ? "border-red-400"
-                    : "border-black/10 focus:border-ember"
+                ${errors.description
+                  ? "border-red-400"
+                  : "border-black/10 focus:border-ember"
                 }
               `}
             />
