@@ -5,6 +5,9 @@ import { X } from "lucide-react";
 import { adminRequest, ApiRequestError } from "@/lib/services/admin.service";
 import type { AdminItem, SectionConfig } from "@/lib/adminConfig";
 import MediaField from "./MediaField";
+import ImageListField from "./ImageListField";
+import FilmReviewsField from "./FilmReviewsField";
+import type { FilmReview } from "@/lib/content";
 
 type Props = {
   section: SectionConfig;
@@ -19,6 +22,15 @@ type Props = {
 const inputClass =
   "mt-1 w-full rounded-lg border border-black/15 bg-white px-3 py-2 text-sm outline-none focus:border-ink focus-visible:ring-2 focus-visible:ring-ink/20";
 
+function parseFilmReviews(value: string): FilmReview[] {
+  try {
+    const parsed: unknown = JSON.parse(value || "[]");
+    return Array.isArray(parsed) ? parsed as FilmReview[] : [];
+  } catch {
+    return [];
+  }
+}
+
 export default function ItemForm({ section, item, categories, passcode, onSaved, onCancel, onUnauthorized }: Props) {
   const editing = Boolean(item);
 
@@ -27,6 +39,12 @@ export default function ItemForm({ section, item, categories, passcode, onSaved,
     Object.fromEntries(
       section.fields.map((field) => {
         const current = item?.[field.name];
+        if (field.kind === "image-list" && Array.isArray(current)) {
+          return [field.name, current.join("\n")];
+        }
+        if (field.kind === "film-reviews" && Array.isArray(current)) {
+          return [field.name, JSON.stringify(current)];
+        }
         return [field.name, current === undefined || current === null ? "" : String(current)];
       })
     )
@@ -35,6 +53,7 @@ export default function ItemForm({ section, item, categories, passcode, onSaved,
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [uploadingImages, setUploadingImages] = useState(false);
 
   const pending = useRef<Set<string>>(new Set());
 
@@ -45,7 +64,20 @@ export default function ItemForm({ section, item, categories, passcode, onSaved,
 
   function setValue(name: string, next: string) {
     const previous = values[name];
-    if (previous && previous !== next) discard(previous); // an uploaded file that got replaced
+    const field = section.fields.find((entry) => entry.name === name);
+    if (field?.kind === "image-list") {
+      const nextUrls = new Set(next.split(/\r?\n/).map((url) => url.trim()).filter(Boolean));
+      previous.split(/\r?\n/).map((url) => url.trim()).filter(Boolean).forEach((url) => {
+        if (!nextUrls.has(url)) discard(url);
+      });
+    } else if (field?.kind === "film-reviews") {
+      const nextReviewImages = new Set(parseFilmReviews(next).map((review) => review.image).filter(Boolean));
+      parseFilmReviews(previous).map((review) => review.image).filter((url): url is string => Boolean(url)).forEach((url) => {
+        if (!nextReviewImages.has(url)) discard(url);
+      });
+    } else if (previous && previous !== next) {
+      discard(previous);
+    }
     setValues((prev) => ({ ...prev, [name]: next }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
   }
@@ -69,8 +101,6 @@ export default function ItemForm({ section, item, categories, passcode, onSaved,
   }, []);
 
 
-  console.log(`@@@ ItemForm values: ${JSON.stringify(item, null, 2)}`);
-
   async function submit(event: React.FormEvent) {
     event.preventDefault();
     setSaving(true);
@@ -78,7 +108,17 @@ export default function ItemForm({ section, item, categories, passcode, onSaved,
     setErrors({});
     try {
       const path = editing ? `/admin/${section.key}/${item!._id}` : `/admin/${section.key}`;
-      await adminRequest(passcode, path, { method: editing ? "PUT" : "POST", body: values });
+      const body = Object.fromEntries(
+        section.fields.map((field) => [
+          field.name,
+          field.kind === "image-list"
+            ? values[field.name].split(/\r?\n/).map((url) => url.trim()).filter(Boolean)
+            : field.kind === "film-reviews"
+              ? parseFilmReviews(values[field.name])
+            : values[field.name],
+        ])
+      );
+      await adminRequest(passcode, path, { method: editing ? "PUT" : "POST", body });
       pending.current.clear(); // saved: these files are now in use
       onSaved(editing ? "Changes saved." : `${section.singular[0].toUpperCase()}${section.singular.slice(1)} added.`);
     } catch (err) {
@@ -124,6 +164,38 @@ export default function ItemForm({ section, item, categories, passcode, onSaved,
             {section.fields.map((field, index) => {
               const value = values[field.name] ?? "";
               const error = errors[field.name];
+
+              if (field.kind === "image-list") {
+                return (
+                  <ImageListField
+                    key={field.name}
+                    field={field}
+                    value={value}
+                    passcode={passcode}
+                    error={error}
+                    onChange={(next) => setValue(field.name, next)}
+                    onUploaded={(url) => pending.current.add(url)}
+                    onUploadingChange={setUploadingImages}
+                    onUnauthorized={onUnauthorized}
+                  />
+                );
+              }
+
+              if (field.kind === "film-reviews") {
+                return (
+                  <FilmReviewsField
+                    key={field.name}
+                    field={field}
+                    value={value}
+                    passcode={passcode}
+                    error={error}
+                    onChange={(next) => setValue(field.name, next)}
+                    onUploaded={(url) => pending.current.add(url)}
+                    onUploadingChange={setUploadingImages}
+                    onUnauthorized={onUnauthorized}
+                  />
+                );
+              }
 
               if (field.kind === "image" || field.kind === "video") {
                 return (
@@ -191,10 +263,10 @@ export default function ItemForm({ section, item, categories, passcode, onSaved,
           </button>
           <button
             type="submit"
-            disabled={saving}
+            disabled={saving || uploadingImages}
             className="rounded-full bg-ember px-6 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-ember-dim disabled:opacity-60"
           >
-            {saving ? "Saving…" : editing ? "Save changes" : `Add ${section.singular}`}
+            {saving ? "Saving…" : uploadingImages ? "Uploading images…" : editing ? "Save changes" : `Add ${section.singular}`}
           </button>
         </div>
       </form>

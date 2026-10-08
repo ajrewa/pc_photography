@@ -97,7 +97,7 @@ Everything returns JSON. Errors look like
 Fields per section:
 
 - **hero**: `couple, location, date, teaser, category, image, videoUrl?, slug?, order?`
-- **films**: `couple, location, date, teaser, category, image, thumbnail?, videoUrl?, slug?, order?`
+- **films**: `couple, location, date, teaser, category, image, thumbnail?, videoUrl?, trailerUrl?, galleryImages?, btsImages?, coupleStory?, btsDescription?, filmReviews?, slug?, order?`
 - **india**: `couple, location, city, state, date, latitude, longitude, image, filmUrl?, slug?, order?`
 - **gratitude**: `quote, author, role, image?, rating?, order?`
 
@@ -106,6 +106,10 @@ Notes:
 - `slug` is generated from `couple` when left out (`"Arya & Federico"` becomes `arya-federico`).
 - `videoUrl` accepts an uploaded file URL or a YouTube/Vimeo link. The API works out
   `videoType` and converts share links to embed URLs.
+- `trailerUrl` accepts a YouTube link and is opened externally by the Watch Trailer button.
+  `galleryImages` and `btsImages` are lists of image URLs and can contain as many images as needed.
+- `coupleStory` and `btsDescription` contain paragraphs separated by blank lines.
+  `filmReviews` is a list of reviewer name, relationship, quote, and optional image entries.
 - `india.filmUrl` defaults to `/films`.
 - Items are returned sorted by `order` (lowest first), then newest first.
 - Uploads accept JPG, PNG, WebP, GIF, AVIF, MP4, WebM and MOV, up to `MAX_UPLOAD_MB` (default 500).

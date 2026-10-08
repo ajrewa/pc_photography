@@ -27,8 +27,11 @@ export const SECTIONS = {
   films: {
     label: "Films",
     Model: Film,
-    fields: ["slug", "couple", "location", "date", "teaser", "category", "image", "thumbnail", "videoUrl", "order"],
-    mediaFields: ["image", "thumbnail", "videoUrl"],
+    fields: ["slug", "couple", "location", "date", "teaser", "category", "image", "thumbnail", "videoUrl", "trailerUrl", "galleryImages", "btsImages", "coupleStory", "btsDescription", "filmReviews", "order"],
+    mediaFields: ["image", "thumbnail", "videoUrl", "galleryImages", "btsImages", "filmReviews.image"],
+    mediaArrayFields: ["galleryImages", "btsImages"],
+    filmReviewArrayFields: ["filmReviews"],
+    mediaObjectArrayFields: ["filmReviews"],
     numberFields: ["order"],
     slugSource: "couple",
     hasVideo: true,

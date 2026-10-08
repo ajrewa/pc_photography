@@ -43,7 +43,31 @@ function normalizePayload(section, body) {
     if (!Object.hasOwn(body, field)) continue;
 
     let value = body[field];
-    if (typeof value === "string") value = value.trim();
+    if (section.filmReviewArrayFields?.includes(field)) {
+      if (!Array.isArray(value) || value.some((review) => !review || typeof review !== "object" || Array.isArray(review))) {
+        throw new ApiError(400, "Reviews must be a list of review objects.", { [field]: "Add valid reviewer, relationship, review, and image details." });
+      }
+      value = value.map((review) => ({
+        reviewer: typeof review.reviewer === "string" ? review.reviewer.trim() : "",
+        relationship: typeof review.relationship === "string" ? review.relationship.trim() : "",
+        quote: typeof review.quote === "string" ? review.quote.trim() : "",
+        image: typeof review.image === "string" ? review.image.trim() : "",
+      }));
+      if (value.some((review) => !review.reviewer || !review.quote || (review.image && !URL_LIKE.test(review.image)))) {
+        throw new ApiError(400, "Some couple reviews need attention.", {
+          [field]: "Every review needs a name and review text. Images must use an http(s) URL or site path.",
+        });
+      }
+    } else
+    if (section.mediaArrayFields?.includes(field)) {
+      const values = Array.isArray(value) ? value : typeof value === "string" ? value.split(/\r?\n/) : null;
+      if (!values || values.some((url) => typeof url !== "string")) {
+        throw new ApiError(400, "Image galleries must be lists of image URLs.", { [field]: "Add one valid image URL per entry." });
+      }
+      value = values.map((url) => url.trim()).filter(Boolean);
+    } else if (typeof value === "string") {
+      value = value.trim();
+    }
 
     if (value === "" || value === null) {
       value = field === "order" ? 0 : undefined;
@@ -53,12 +77,22 @@ function normalizePayload(section, body) {
     data[field] = value;
   }
 
-  const urlFields = [...section.mediaFields, ...(section.fields.includes("filmUrl") ? ["filmUrl"] : [])];
+  const urlFields = [
+    ...section.mediaFields.filter((field) => !section.mediaArrayFields?.includes(field)),
+    ...(section.fields.includes("trailerUrl") ? ["trailerUrl"] : []),
+    ...(section.fields.includes("filmUrl") ? ["filmUrl"] : []),
+  ];
   const details = {};
   for (const field of urlFields) {
     const value = data[field];
     if (value !== undefined && !(typeof value === "string" && URL_LIKE.test(value))) {
       details[field] = "Use a link starting with https:// or a site path starting with /.";
+    }
+  }
+  for (const field of section.mediaArrayFields ?? []) {
+    const values = data[field];
+    if (values !== undefined && values.some((url) => !URL_LIKE.test(url))) {
+      details[field] = "Each image must be an absolute http(s) URL or a site path.";
     }
   }
   if (Object.keys(details).length) throw new ApiError(400, "Some fields need attention.", details);
@@ -70,6 +104,19 @@ function normalizePayload(section, body) {
       data.videoUrl = toEmbedUrl(data.videoUrl, type);
     } else {
       data.videoType = undefined;
+    }
+  }
+  if (section.hasVideo && Object.hasOwn(data, "trailerUrl") && data.trailerUrl) {
+    let host = "";
+    try {
+      host = new URL(data.trailerUrl).hostname.replace(/^www\./i, "").toLowerCase();
+    } catch {
+      host = "";
+    }
+    if (host !== "youtube.com" && host !== "youtu.be" && host !== "youtube-nocookie.com") {
+      throw new ApiError(400, "Use a YouTube trailer link.", {
+        trailerUrl: "Paste a YouTube or youtu.be link.",
+      });
     }
   }
 

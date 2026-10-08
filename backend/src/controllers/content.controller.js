@@ -15,7 +15,21 @@ export const getContent = asyncHandler(async (req, res) => {
         name,
         docs.map((doc) => {
           const item = doc.toObject();
-          for (const field of mediaFields) item[field] = toMediaProxyUrl(item[field], req);
+          for (const field of mediaFields) {
+            if (field.endsWith(".image")) {
+              const arrayField = field.slice(0, -".image".length);
+              if (Array.isArray(item[arrayField])) {
+                item[arrayField] = item[arrayField].map((entry) => ({
+                  ...entry,
+                  image: toMediaProxyUrl(entry.image, req),
+                }));
+              }
+            } else {
+              item[field] = Array.isArray(item[field])
+                ? item[field].map((url) => toMediaProxyUrl(url, req))
+                : toMediaProxyUrl(item[field], req);
+            }
+          }
           return item;
         }),
       ];

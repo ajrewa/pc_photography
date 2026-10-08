@@ -3,7 +3,15 @@ import { deleteObject, isManagedUrl, urlToKey } from "./storage.service.js";
 
 /** Every media URL stored on a document (image, thumbnail, videoUrl...). */
 export function collectMedia(section, doc) {
-  return section.mediaFields.map((field) => doc.get(field)).filter(Boolean);
+  const media = section.mediaFields.flatMap((field) => {
+    if (field.endsWith(".image") && section.mediaObjectArrayFields?.includes(field.slice(0, -".image".length))) {
+      const entries = doc.get(field.slice(0, -".image".length)) ?? [];
+      return entries.map((entry) => entry.image).filter(Boolean);
+    }
+    const value = doc.get(field);
+    return Array.isArray(value) ? value.filter(Boolean) : value ? [value] : [];
+  });
+  return media;
 }
 
 /** Is this file used by any document, in any section? */

@@ -14,6 +14,17 @@ const filmSchema = new mongoose.Schema(
     thumbnail: { type: String, trim: true },
     videoUrl: { type: String, trim: true },
     videoType: { type: String, enum: ["file", "youtube", "vimeo"] },
+    trailerUrl: { type: String, trim: true },
+    galleryImages: { type: [String], default: [] },
+    btsImages: { type: [String], default: [] },
+    coupleStory: { type: String, trim: true, maxlength: 10000 },
+    btsDescription: { type: String, trim: true, maxlength: 10000 },
+    filmReviews: [{
+      reviewer: { type: String, required: true, trim: true, maxlength: 120 },
+      relationship: { type: String, trim: true, maxlength: 80 },
+      quote: { type: String, required: true, trim: true, maxlength: 1500 },
+      image: { type: String, trim: true },
+    }],
     order: { type: Number, default: 0 },
   },
   { timestamps: true }

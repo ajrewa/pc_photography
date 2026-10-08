@@ -5,7 +5,7 @@ export type SectionKey = keyof SiteContent;
 /** A record as returned by the API. Every record has an `id`. */
 export type AdminItem = { id: string } & Record<string, unknown>;
 
-export type FieldKind = "text" | "textarea" | "number" | "image" | "video";
+export type FieldKind = "text" | "textarea" | "number" | "image" | "video" | "image-list" | "film-reviews";
 
 export type FieldConfig = {
   name: string;
@@ -86,7 +86,13 @@ export const SECTIONS: SectionConfig[] = [
       ...filmBasics,
       { name: "image", label: "Cover image", kind: "image", required: true, help: "Shown on the film page." },
       { name: "thumbnail", label: "Card thumbnail", kind: "image", help: "Optional. Used on the film grid. Falls back to the cover image." },
-      { name: "videoUrl", label: "Film", kind: "video", help: "Upload a video file, or paste a YouTube or Vimeo link." },
+      { name: "videoUrl", label: "Featured film", kind: "video", help: "Optional uploaded video or YouTube/Vimeo link. This video can play on the wedding detail page." },
+      { name: "trailerUrl", label: "YouTube trailer link", kind: "text", placeholder: "https://youtu.be/...", help: "The Watch Trailer button opens this YouTube link in a new tab; the trailer is not embedded in this website." },
+      { name: "galleryImages", label: "Wedding gallery images", kind: "image-list", help: "Add as many wedding photos as you like. Upload several at once or paste one image URL per line." },
+      { name: "btsImages", label: "Behind-the-scenes images", kind: "image-list", help: "Optional BTS gallery. Upload several at once or paste one image URL per line." },
+      { name: "coupleStory", label: "Couple’s journey", kind: "textarea", help: "Write the story in paragraphs. Separate paragraphs with a blank line." },
+      { name: "btsDescription", label: "Behind-the-scenes story", kind: "textarea", help: "Describe the moments and people behind the scenes." },
+      { name: "filmReviews", label: "Couple & family reviews", kind: "film-reviews", help: "Add separate reviews from the couple and family members, each with their own name and optional photo." },
       slugField("Part of the film's page address. Changing it breaks links that already exist."),
       orderField,
     ],

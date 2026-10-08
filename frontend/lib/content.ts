@@ -58,6 +58,19 @@ export type ContentFilm = Media & {
   teaser: string;
   category: string;
   thumbnail?: string;
+  trailerUrl?: string;
+  galleryImages?: string[];
+  btsImages?: string[];
+  coupleStory?: string;
+  btsDescription?: string;
+  filmReviews?: FilmReview[];
+};
+
+export type FilmReview = {
+  reviewer: string;
+  relationship?: string;
+  quote: string;
+  image?: string;
 };
 
 export type IndiaFilm = {
