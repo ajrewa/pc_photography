@@ -7,9 +7,9 @@ import AdminGate from "@/components/admin/AdminGate";
 import SectionManager from "@/components/admin/SectionManager";
 import { adminRequest } from "@/lib/services/admin.service";
 import { getSiteContent } from "@/lib/services/content.service";
-import { PASSCODE_STORAGE_KEY, SECTIONS, type SectionKey } from "@/lib/adminConfig";
+import { PASSCODE_STORAGE_KEY, SECTIONS } from "@/lib/adminConfig";
 import { ContentSection } from "@/lib/enums";
-import type { AdminItem, SiteContent } from "@/lib/types";
+import type { AdminItem, SectionKey, SiteContent } from "@/lib/types";
 
 type Toast = { text: string; tone: "ok" | "error" };
 

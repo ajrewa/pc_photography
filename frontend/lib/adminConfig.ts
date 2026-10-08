@@ -1,8 +1,7 @@
 import { AdminFieldKind, ContentSection } from "@/lib/enums";
-import type { AdminItem, FieldConfig, SectionConfig, SiteContent } from "@/lib/types";
+import type { AdminItem, FieldConfig, SectionConfig, SectionKey, SiteContent } from "@/lib/types";
 
-export type { AdminItem, FieldConfig, SectionConfig } from "@/lib/types";
-export type SectionKey = ContentSection;
+export type { AdminItem, FieldConfig, SectionConfig, SectionKey } from "@/lib/types";
 
 const str = (value: unknown) => (typeof value === "string" ? value : "");
 

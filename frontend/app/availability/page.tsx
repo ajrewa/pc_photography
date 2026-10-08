@@ -10,6 +10,7 @@ import {
     X,
 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { BookingStatus } from "@/lib/enums";
 import type { Booking } from "@/lib/types";
 
 const bookings: Booking[] = [
@@ -481,7 +482,10 @@ export default function AvailabilityPage() {
                                 );
                             }
 
-                            const booked = isDateBooked(date);
+                            const status = isDateBooked(date)
+                                ? BookingStatus.Booked
+                                : BookingStatus.Available;
+                            const booked = status === BookingStatus.Booked;
 
                             const selected = isDateInRange(
                                 date,

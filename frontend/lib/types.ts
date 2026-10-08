@@ -1,6 +1,8 @@
 import type { LucideIcon } from "lucide-react";
 import type { AdminFieldKind, ContentSection, JourneySide, UploadType, VideoType } from "@/lib/enums";
 
+export type SectionKey = ContentSection;
+
 export type Media = {
   image: string;
   videoUrl?: string;
