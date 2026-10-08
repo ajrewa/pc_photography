@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import SectionHeading from "./SectionHeading";
 import FilmCard from "./FilmCard";
-import type { ContentFilm } from "@/lib/content";
+import type { ContentFilm } from "@/lib/types";
 
 export default function FeatureFilms({
   films,

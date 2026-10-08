@@ -1,4 +1,4 @@
-import type { SiteContent } from "@/lib/content";
+import type { SiteContent } from "@/lib/types";
 import { API_URL } from "@/lib/api";
 
 export async function getSiteContent(): Promise<SiteContent> {

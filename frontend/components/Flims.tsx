@@ -2,17 +2,9 @@
 
 import Image from "next/image";
 import { Play } from "lucide-react";
+import type { LegacyFilmCard } from "@/lib/types";
 
-type Film = {
-  date: string;
-  location: string;
-  title: string;
-  image: string;
-  borderColor: string;
-  featured?: boolean;
-};
-
-const trendingFilms: Film[] = [
+const trendingFilms: LegacyFilmCard[] = [
   {
     date: "JUN 2025",
     location: "EUROPE",
@@ -44,7 +36,7 @@ const trendingFilms: Film[] = [
   },
 ];
 
-const classics: Film[] = [
+const classics: LegacyFilmCard[] = [
   {
     date: "2024",
     location: "INDIA",
@@ -75,7 +67,7 @@ const classics: Film[] = [
   },
 ];
 
-function FilmCard({ film }: { film: Film }) {
+function FilmCard({ film }: { film: LegacyFilmCard }) {
   return (
     <article
       className="border-2 group min-w-[82vw] sm:min-w-[420px] lg:min-w-0"
@@ -180,7 +172,7 @@ function FilmRow({
   films,
 }: {
   title: string;
-  films: Film[];
+  films: LegacyFilmCard[];
 }) {
   return (
     <section className="mb-[100px]">

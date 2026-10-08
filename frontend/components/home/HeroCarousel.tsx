@@ -131,7 +131,8 @@ import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { ContentFilm } from "@/lib/content";
+import { VideoType } from "@/lib/enums";
+import type { ContentFilm } from "@/lib/types";
 import DefaultBanner from "./DefaultBanner";
 
 export default function HeroCarousel({ slides }: { slides: ContentFilm[] }) {
@@ -164,7 +165,7 @@ export default function HeroCarousel({ slides }: { slides: ContentFilm[] }) {
             i === index ? "opacity-100" : "pointer-events-none opacity-0"
           }`}
         >
-          {slide.videoUrl && slide.videoType === "file" ? (
+          {slide.videoUrl && slide.videoType === VideoType.File ? (
             <video
               src={slide.videoUrl}
               poster={slide.image}

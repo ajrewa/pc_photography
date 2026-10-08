@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { submitReview, uploadReviewImage, type ReviewPayload } from "@/lib/services/review.service";
+import { ReviewRole } from "@/lib/enums";
+import { submitReview, uploadReviewImage } from "@/lib/services/review.service";
+import type { ReviewPayload } from "@/lib/types";
 
 type ReviewState = ReviewPayload & {
   submitting: boolean;
@@ -13,7 +15,7 @@ const initialState: ReviewState = {
   image: "",
   quote: "",
   rating: 0,
-  role: "bride",
+  role: ReviewRole.Bride,
   submitting: false,
   uploading: false,
   message: "",

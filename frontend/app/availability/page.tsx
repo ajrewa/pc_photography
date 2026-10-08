@@ -10,16 +10,7 @@ import {
     X,
 } from "lucide-react";
 import { useMemo, useState } from "react";
-
-type AvailabilityStatus = "available" | "booked";
-
-type Booking = {
-    start: string;
-    end: string;
-    couple: string;
-    location: string;
-    type: string;
-};
+import type { Booking } from "@/lib/types";
 
 const bookings: Booking[] = [
     {

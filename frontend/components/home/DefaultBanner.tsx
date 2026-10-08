@@ -5,9 +5,10 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
+import { VideoType } from "@/lib/enums";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Camera, ArrowRight, Sparkles } from "lucide-react";
-import type { ContentFilm } from "@/lib/content";
+import type { ContentFilm } from "@/lib/types";
 
 export default function DefaultBanner({ slides }: { slides?: ContentFilm[] }) {
   const [index, setIndex] = useState(0);
@@ -177,7 +178,7 @@ export default function DefaultBanner({ slides }: { slides?: ContentFilm[] }) {
             i === index ? "opacity-100" : "pointer-events-none opacity-0"
           }`}
         >
-          {slide.videoUrl && slide.videoType === "file" ? (
+          {slide.videoUrl && slide.videoType === VideoType.File ? (
             <video
               src={slide.videoUrl}
               poster={slide.image}

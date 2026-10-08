@@ -7,8 +7,9 @@ import AdminGate from "@/components/admin/AdminGate";
 import SectionManager from "@/components/admin/SectionManager";
 import { adminRequest } from "@/lib/services/admin.service";
 import { getSiteContent } from "@/lib/services/content.service";
-import { PASSCODE_STORAGE_KEY, SECTIONS, type AdminItem, type SectionKey } from "@/lib/adminConfig";
-import type { SiteContent } from "@/lib/content";
+import { PASSCODE_STORAGE_KEY, SECTIONS, type SectionKey } from "@/lib/adminConfig";
+import { ContentSection } from "@/lib/enums";
+import type { AdminItem, SiteContent } from "@/lib/types";
 
 type Toast = { text: string; tone: "ok" | "error" };
 
@@ -17,7 +18,7 @@ export default function AdminPage() {
   const [passcode, setPasscode] = useState<string | null | "checking">("checking");
   const [notice, setNotice] = useState("");
   const [content, setContent] = useState<SiteContent | null>(null);
-  const [active, setActive] = useState<SectionKey>("hero");
+  const [active, setActive] = useState<SectionKey>(ContentSection.Hero);
   const [toast, setToast] = useState<Toast | null>(null);
   const [loadError, setLoadError] = useState("");
 

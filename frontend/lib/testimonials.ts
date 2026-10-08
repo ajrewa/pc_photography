@@ -1,9 +1,6 @@
-export type Testimonial = {
-  quote: string;
-  author: string;
-  role: string;
-  image: string;
-};
+import type { Testimonial } from "@/lib/types";
+
+export type { Testimonial } from "@/lib/types";
 
 export const testimonials: Testimonial[] = [
   {
