@@ -23,7 +23,7 @@ export default function AroundIndia({ films }: Props) {
   const handleViewFilm = () => {
     if (!activeFilm?.filmUrl) return;
 
-    router.push(activeFilm.filmUrl);
+    router.push(`/films/${activeFilm.slug}`);
   };
 
   return (
