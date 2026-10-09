@@ -15,7 +15,7 @@ export default function ClientProviders({
 }) {
     const pathname = usePathname();
     const isAboutUs = pathname === "/about";
-    const isAdmin = pathname === "/admin";  
+    const isAdmin = pathname?.startsWith("/admin") ?? false;
 
     return (
         <Provider store={store}>

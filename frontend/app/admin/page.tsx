@@ -89,6 +89,9 @@ export default function AdminPage() {
             <p className="text-xs text-stone">PC Photography</p>
           </div>
           <div className="flex items-center gap-2">
+            <Link href="/admin/availability" className="rounded-full px-4 py-2 text-sm text-stone transition-colors hover:text-ink">
+              Availability
+            </Link>
             <Link href="/" className="rounded-full px-4 py-2 text-sm text-stone transition-colors hover:text-ink">
               View site
             </Link>
