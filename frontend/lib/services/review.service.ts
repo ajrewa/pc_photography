@@ -1,12 +1,7 @@
 import { API_URL } from "@/lib/api";
+import type { ReviewPayload } from "@/lib/types";
 
-export type ReviewPayload = {
-  author: string;
-  image: string;
-  quote: string;
-  rating: number;
-  role: string;
-};
+export type { ReviewPayload } from "@/lib/types";
 
 async function readError(response: Response, fallback: string) {
   const body = (await response.json().catch(() => null)) as { error?: string } | null;

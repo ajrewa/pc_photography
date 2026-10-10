@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ArrowUpRight, Heart, MapPin, Play, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
-import type { IndiaFilm } from "@/lib/content";
+import type { IndiaFilm } from "@/lib/types";
 import SectionHeading from "../SectionHeading";
 
 const WORLD_MAP = "/map/world.json";

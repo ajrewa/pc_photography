@@ -3,15 +3,8 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-
-type JourneyItem = {
-  year: string;
-  title: string;
-  location: string;
-  description: string;
-  image: string;
-  side: "left" | "right";
-};
+import { JourneySide } from "@/lib/enums";
+import type { JourneyItem } from "@/lib/types";
 
 const journey: JourneyItem[] = [
   {
@@ -22,7 +15,7 @@ const journey: JourneyItem[] = [
       "It started with a camera, a few weddings and an obsession with telling stories differently. Every celebration became an opportunity to capture something honest, emotional and completely personal.",
     image:
       "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2000&auto=format&fit=crop",
-    side: "right",
+    side: JourneySide.Right,
   },
   {
     year: "2014",
@@ -32,7 +25,7 @@ const journey: JourneyItem[] = [
       "The work began moving beyond traditional wedding photography. We started looking for the quiet moments between the big ones — glances, laughter, nervous hands and everything that makes a wedding feel real.",
     image:
       "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2000&auto=format&fit=crop",
-    side: "left",
+    side: JourneySide.Left,
   },
   {
     year: "2016",
@@ -42,7 +35,7 @@ const journey: JourneyItem[] = [
       "Destination celebrations brought new landscapes, cultures and stories. Weddings became cinematic journeys, with every frame designed to feel like a memory rather than simply a photograph.",
     image:
       "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2000&auto=format&fit=crop",
-    side: "right",
+    side: JourneySide.Right,
   },
   {
     year: "2018",
@@ -52,7 +45,7 @@ const journey: JourneyItem[] = [
       "Our stories travelled across borders. From intimate European celebrations to elaborate destination weddings, the language remained the same — emotion first, everything else second.",
     image:
       "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=2000&auto=format&fit=crop",
-    side: "left",
+    side: JourneySide.Left,
   },
   {
     year: "2020",
@@ -62,7 +55,7 @@ const journey: JourneyItem[] = [
       "A changing world made us appreciate the smallest moments even more. Intimate celebrations became some of our most meaningful stories, reminding us that a wedding is ultimately about people.",
     image:
       "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=2000&auto=format&fit=crop",
-    side: "right",
+    side: JourneySide.Right,
   },
   {
     year: "2022",
@@ -72,7 +65,7 @@ const journey: JourneyItem[] = [
       "Photography evolved into a complete visual language. Films, photographs and sound came together to create wedding stories that could be experienced again and again.",
     image:
       "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2000&auto=format&fit=crop",
-    side: "left",
+    side: JourneySide.Left,
   },
   {
     year: "2024",
@@ -82,7 +75,7 @@ const journey: JourneyItem[] = [
       "Today, every wedding is approached as its own world. Different people, different cultures and different places — but always the same pursuit: creating something that feels timeless.",
     image:
       "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2000&auto=format&fit=crop",
-    side: "right",
+    side: JourneySide.Right,
   },
   {
     year: "2026",
@@ -92,7 +85,7 @@ const journey: JourneyItem[] = [
       "The journey continues. New places, new couples and new ways of seeing. The camera remains the same, but the stories keep changing.",
     image:
       "https://images.unsplash.com/photo-1507504031003-b417219a0fde?q=80&w=2000&auto=format&fit=crop",
-    side: "left",
+    side: JourneySide.Left,
   },
 ];
 
@@ -229,7 +222,7 @@ export default function PhotographerJourney() {
             "
           >
             {/* Text when left */}
-            {active.side === "left" && (
+            {active.side === JourneySide.Left && (
               <JourneyText item={active} />
             )}
 
@@ -240,7 +233,7 @@ export default function PhotographerJourney() {
                 overflow-hidden
                 rounded-[5px]
                 ${
-                  active.side === "left"
+                  active.side === JourneySide.Left
                     ? "lg:order-2"
                     : "lg:order-1"
                 }
@@ -304,7 +297,7 @@ export default function PhotographerJourney() {
             </div>
 
             {/* Text when right */}
-            {active.side === "right" && (
+            {active.side === JourneySide.Right && (
               <div className="lg:order-2">
                 <JourneyText item={active} />
               </div>

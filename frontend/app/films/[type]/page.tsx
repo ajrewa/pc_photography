@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, Play } from "lucide-react";
 import { useEffect } from "react";
+import { VideoType } from "@/lib/enums";
 import FilmCard from "@/components/FilmCard";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchContent } from "@/lib/store/contentSlice";
@@ -127,7 +128,7 @@ export default function FilmTypePage() {
     return (
       <main className="min-h-screen bg-[#faf9f6] pb-20 text-[#0b0b0a]">
         <section className="relative mx-3 mt-3 h-[58vh] min-h-[340px] max-h-[760px] overflow-hidden rounded-[24px] bg-[#9aa9bc] sm:mx-4 sm:mt-4 sm:h-[68vh] sm:rounded-[28px]">
-          {bannerVideoUrl && film.videoType === "file" ? (
+          {bannerVideoUrl && film.videoType === VideoType.File ? (
             <video
               src={bannerVideoUrl}
               // poster={film.image}

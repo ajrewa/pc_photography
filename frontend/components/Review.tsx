@@ -2,6 +2,7 @@
 
 import { FormEvent, useRef, useState } from "react";
 import { Star, Upload } from "lucide-react";
+import { ReviewRole } from "@/lib/enums";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchContent } from "@/lib/store/contentSlice";
 import { setField, submitReviewThunk, uploadReviewImageThunk } from "@/lib/store/reviewSlice";
@@ -77,11 +78,11 @@ export default function ReviewSubmit() {
                 onChange={(e) => dispatch(setField({ field: "role", value: e.target.value }))}
                 className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm outline-none transition focus:border-black/30"
               >
-                <option value="bride">Bride</option>
-                <option value="groom">Groom</option>
-                <option value="couple">Couple</option>
-                <option value="family">Family</option>
-                <option value="other">Other</option>
+                <option value={ReviewRole.Bride}>Bride</option>
+                <option value={ReviewRole.Groom}>Groom</option>
+                <option value={ReviewRole.Couple}>Couple</option>
+                <option value={ReviewRole.Family}>Family</option>
+                <option value={ReviewRole.Other}>Other</option>
               </select>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { SiteContent } from "@/lib/content";
+import type { SiteContent } from "@/lib/types";
 import { getSiteContent } from "@/lib/services/content.service";
 
 const emptyContent: SiteContent = { hero: [], films: [], india: [], gratitude: [] };

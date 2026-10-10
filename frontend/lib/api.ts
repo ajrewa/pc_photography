@@ -1,4 +1,6 @@
-import type { SiteContent } from "@/lib/content";
+import type { SiteContent, UploadResult } from "@/lib/types";
+
+export type { UploadResult } from "@/lib/types";
 
 /** Base URL of the backend, e.g. http://localhost:5000 (no trailing slash). */
 export const API_URL = (process.env.NEXT_PUBLIC_BACKEND_URL || "").replace(/\/+$/, "");
@@ -51,8 +53,6 @@ export async function adminRequest<T>(
   });
   return readResponse<T>(response);
 }
-
-export type UploadResult = { url: string; type: "image" | "video"; size: number };
 
 /** Uploads to Backblaze B2 through the backend. Uses XHR so we can report progress. */
 export function uploadMedia(

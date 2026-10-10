@@ -1,20 +1,8 @@
-export type Film = {
-  slug: string;
-  couple: string;
-  location: string;
-  date: string;
-  teaser: string;
-  category: string;
-  image: string;
-};
+import type { FilmCategory } from "@/lib/types";
 
-export type Category = {
-  slug: string;
-  label: string;
-  films: Film[];
-};
+export type { FilmCategory as Category, StaticFilm as Film } from "@/lib/types";
 
-export const filmSections: Category[] = [
+export const filmSections: FilmCategory[] = [
   {
     slug: "destination",
     label: "Destination",

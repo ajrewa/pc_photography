@@ -10,12 +10,9 @@ import {
   type LucideIcon,
   Home,
 } from "lucide-react";
+import type { NavItem } from "@/lib/types";
 
-export type NavItem = {
-  label: string;
-  href: string;
-  icon: LucideIcon;
-};
+export type { NavItem } from "@/lib/types";
 
 export const navItems: NavItem[] = [
   { label: "Home", href: "/", icon: Home },

@@ -1,6 +1,8 @@
 import { API_URL, ApiRequestError } from "@/lib/api";
+import type { UploadResult } from "@/lib/types";
 
 export { ApiRequestError };
+export type { UploadResult } from "@/lib/types";
 
 export async function adminRequest<T>(
   passcode: string,
@@ -23,8 +25,6 @@ export async function adminRequest<T>(
   }
   return data as T;
 }
-
-export type UploadResult = { url: string; type: "image" | "video"; size: number };
 
 export function uploadMedia(
   passcode: string,
