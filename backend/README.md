@@ -78,6 +78,8 @@ Everything returns JSON. Errors look like
 | --- | --- | --- |
 | GET | `/api/content` | `{ hero: [], films: [], india: [], gratitude: [] }`, what the site renders |
 | GET | `/api/health` | Server, database and storage status |
+| GET | `/api/availability` | `{ bookedDates: ["YYYY-MM-DD", ...] }` |
+| POST | `/api/availability` | Book a date range with `startDate`, `endDate`, `name`, `email`, and optional `location` |
 | POST | `/api/reviews` | Submit a review with `author`, `role`, `quote`, and a 1–5 `rating`; `image` is optional |
 | POST | `/api/reviews/upload` | Upload an optional review image (`multipart/form-data`, field `file`) |
 
@@ -88,6 +90,9 @@ Everything returns JSON. Errors look like
 | Method | Path | Description |
 | --- | --- | --- |
 | POST | `/api/admin/verify` | Checks the passcode |
+| GET | `/api/admin/availability` | List user and admin bookings |
+| POST | `/api/admin/availability` | Book dates as admin with `startDate`, `endDate`, and optional `name` and `location` |
+| DELETE | `/api/admin/availability/:bookingId` | Remove a booking (including user bookings) |
 | POST | `/api/admin/:section` | Add an item (JSON body) |
 | PUT | `/api/admin/:section/:id` | Edit an item (send any of its fields) |
 | DELETE | `/api/admin/:section/:id` | Remove an item and its uploaded files |
@@ -112,6 +117,8 @@ Notes:
   `filmReviews` is a list of reviewer name, relationship, quote, and optional image entries.
 - `india.filmUrl` defaults to `/films`.
 - Items are returned sorted by `order` (lowest first), then newest first.
+- Availability date ranges reserve each date; overlapping requests receive a conflict response.
+  Only passcode-protected admin routes can remove a booking.
 - Uploads accept JPG, PNG, WebP, GIF, AVIF, MP4, WebM and MOV, up to `MAX_UPLOAD_MB` (default 500).
 
 ## Folder structure

@@ -10,6 +10,11 @@ import { deleteMedia, uploadMedia } from "../controllers/upload.controller.js";
 import { requirePasscode } from "../middleware/adminPasscode.js";
 import { adminLimiter, wrongPasscodeLimiter } from "../middleware/rateLimiters.js";
 import { uploadSingle } from "../middleware/upload.js";
+import {
+  adminBookDates,
+  adminGetAvailability,
+  adminRemoveBooking,
+} from "../controllers/availability.controller.js";
 
 const router = Router();
 
@@ -24,6 +29,11 @@ router.post("/verify", verifyPasscode);
 router.post("/upload", uploadSingle, uploadMedia);
 router.delete("/upload", deleteMedia);
 router.delete("/gratitude", deleteAllGratitude);
+
+// Availability bookings are passcode-protected like all other admin operations.
+router.get("/availability", adminGetAvailability);
+router.post("/availability", adminBookDates);
+router.delete("/availability/:bookingId", adminRemoveBooking);
 
 // Content: :section is one of hero | films | india | gratitude
 router.post("/:section", createItem);

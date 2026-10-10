@@ -9,40 +9,8 @@ import {
     ChevronRight,
     X,
 } from "lucide-react";
-import { useMemo, useState } from "react";
-import { BookingStatus } from "@/lib/enums";
-import type { Booking } from "@/lib/types";
-
-const bookings: Booking[] = [
-    {
-        start: "2026-09-05",
-        end: "2026-09-07",
-        couple: "Aarav & Meera",
-        location: "Udaipur, Rajasthan",
-        type: "Destination Wedding",
-    },
-    {
-        start: "2026-09-18",
-        end: "2026-09-20",
-        couple: "Rohan & Ananya",
-        location: "Jaipur, Rajasthan",
-        type: "Wedding",
-    },
-    {
-        start: "2026-10-10",
-        end: "2026-10-12",
-        couple: "Kabir & Siya",
-        location: "Goa, India",
-        type: "Beach Wedding",
-    },
-    {
-        start: "2026-11-21",
-        end: "2026-11-23",
-        couple: "Arjun & Tara",
-        location: "Jodhpur, Rajasthan",
-        type: "Destination Wedding",
-    },
-];
+import { useEffect, useMemo, useState } from "react";
+import { API_URL } from "@/lib/api";
 
 const MONTH_NAMES = [
     "January",
@@ -72,14 +40,6 @@ function formatDate(date: Date) {
 function parseDate(value: string) {
     const [year, month, day] = value.split("-").map(Number);
     return new Date(year, month - 1, day);
-}
-
-function isDateBooked(date: Date) {
-    const value = formatDate(date);
-
-    return bookings.some((booking) => {
-        return value >= booking.start && value <= booking.end;
-    });
 }
 
 function isDateInRange(
@@ -122,8 +82,54 @@ export default function AvailabilityPage() {
     const [guestName, setGuestName] = useState("");
     const [email, setEmail] = useState("");
     const [location, setLocation] = useState("");
+    const [bookedDates, setBookedDates] = useState<string[]>([]);
+    const [availabilityLoaded, setAvailabilityLoaded] = useState(false);
+    const [loadError, setLoadError] = useState("");
+    const [submitError, setSubmitError] = useState("");
+    const [confirmation, setConfirmation] = useState("");
+    const [submitting, setSubmitting] = useState(false);
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
+
+    useEffect(() => {
+        let active = true;
+        fetch(`${API_URL}/api/availability`, { cache: "no-store" })
+            .then(async (response) => {
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || "Could not load availability.");
+                return data as { bookedDates?: string[] };
+            })
+            .then((data) => {
+                if (active) {
+                    if (!Array.isArray(data.bookedDates)) {
+                        throw new Error("The availability service returned an invalid response.");
+                    }
+                    setBookedDates(data.bookedDates);
+                    setAvailabilityLoaded(true);
+                    setLoadError("");
+                }
+            })
+            .catch((error: unknown) => {
+                if (active) setLoadError(error instanceof Error ? error.message : "Could not load availability.");
+            });
+        return () => {
+            active = false;
+        };
+    }, []);
+
+    function isDateBooked(date: Date) {
+        return bookedDates.includes(formatDate(date));
+    }
+
+    function selectionHasBookedDates(start: string | null, end: string | null) {
+        if (!start || !end) return false;
+        const first = parseDate(start);
+        const last = parseDate(end);
+        for (const date = new Date(first); date <= last; date.setDate(date.getDate() + 1)) {
+            if (isDateBooked(date)) return true;
+        }
+        return false;
+    }
 
     const daysInMonth = new Date(
         year,
@@ -164,7 +170,7 @@ export default function AvailabilityPage() {
     }
 
     function handleDateClick(date: Date) {
-        if (isDateBooked(date)) return;
+        if (!availabilityLoaded || loadError || isDateBooked(date) || formatDate(date) < formatDate(new Date())) return;
         const value = formatDate(date);
         if (!selectedStart || selectedEnd) {
             setSelectedStart(value);
@@ -186,6 +192,45 @@ export default function AvailabilityPage() {
         setShowModal(false);
         setSelectedStart(null);
         setSelectedEnd(null);
+        setSubmitError("");
+    }
+
+    async function submitBooking() {
+        if (!selectedStart || !selectedEnd || selectionHasBookedDates(selectedStart, selectedEnd)) {
+            setSubmitError("One or more selected dates are no longer available. Please choose another date range.");
+            return;
+        }
+        setSubmitting(true);
+        setSubmitError("");
+        try {
+            const response = await fetch(`${API_URL}/api/availability`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    startDate: selectedStart,
+                    endDate: selectedEnd,
+                    name: guestName,
+                    email,
+                    location,
+                }),
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || "Could not book these dates.");
+            const dates = bookedDates.slice();
+            const cursor = parseDate(selectedStart);
+            const last = parseDate(selectedEnd);
+            for (; cursor <= last; cursor.setDate(cursor.getDate() + 1)) dates.push(formatDate(cursor));
+            setBookedDates(dates);
+            setConfirmation(data.message || "Your dates have been booked.");
+            setGuestName("");
+            setEmail("");
+            setLocation("");
+            closeModal();
+        } catch (error) {
+            setSubmitError(error instanceof Error ? error.message : "Could not book these dates.");
+        } finally {
+            setSubmitting(false);
+        }
     }
 
     const selectedDays =
@@ -236,6 +281,17 @@ export default function AvailabilityPage() {
                     Back
                 </a>
             </header>
+
+            {loadError && (
+                <p role="alert" className="mx-auto mt-6 max-w-7xl px-5 text-sm text-[#a45f57] sm:px-8 lg:px-12 xl:px-20">
+                    {loadError} Please try again later.
+                </p>
+            )}
+            {confirmation && (
+                <p role="status" className="mx-auto mt-6 max-w-7xl px-5 text-sm text-[#526341] sm:px-8 lg:px-12 xl:px-20">
+                    {confirmation}
+                </p>
+            )}
 
             {/* ============================================================ */}
             {/* INTRO                                                         */}
@@ -482,21 +538,16 @@ export default function AvailabilityPage() {
                                 );
                             }
 
-                            const status = isDateBooked(date)
-                                ? BookingStatus.Booked
-                                : BookingStatus.Available;
-                            const booked = status === BookingStatus.Booked;
+                            const booked = isDateBooked(date);
+                            const value = formatDate(date);
+                            const todayValue = formatDate(new Date());
+                            const isPast = value < todayValue;
+                            const unavailable = booked || isPast || !availabilityLoaded || Boolean(loadError);
 
                             const selected = isDateInRange(
                                 date,
                                 selectedStart,
                                 selectedEnd
-                            );
-
-                            const value = formatDate(date);
-
-                            const todayValue = formatDate(
-                                new Date()
                             );
 
                             const isToday =
@@ -506,7 +557,7 @@ export default function AvailabilityPage() {
                                 <button
                                     key={value}
                                     type="button"
-                                    disabled={booked}
+                                    disabled={unavailable}
                                     onClick={() =>
                                         handleDateClick(date)
                                     }
@@ -525,8 +576,10 @@ export default function AvailabilityPage() {
 
                     ${booked
                                             ? "cursor-not-allowed bg-[#b77b72]/10"
-                                            : "cursor-pointer hover:bg-white"
-                                        }
+                            : isPast
+                                ? "cursor-not-allowed bg-black/[0.025]"
+                            : "cursor-pointer hover:bg-white"
+                        }
 
                     ${selected
                                             ? "!bg-black text-white"
@@ -571,7 +624,7 @@ export default function AvailabilityPage() {
                                             {date.getDate()}
                                         </span>
 
-                                        {booked ? (
+                                        {unavailable ? (
                                             <span
                                                 className="
                           hidden
@@ -582,7 +635,7 @@ export default function AvailabilityPage() {
                           sm:block
                         "
                                             >
-                                                Booked
+                                                {booked ? "Booked" : isPast ? "Past" : loadError ? "Unavailable" : "Checking"}
                                             </span>
                                         ) : (
                                             <span
@@ -604,7 +657,7 @@ export default function AvailabilityPage() {
                                     {/* Bottom information */}
 
                                     <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
-                                        {booked ? (
+                                        {unavailable ? (
                                             <p
                                                 className={`
                           text-[7px]
@@ -616,7 +669,7 @@ export default function AvailabilityPage() {
                                                     }
                         `}
                                             >
-                                                Unavailable
+                                                {booked ? "Unavailable" : isPast ? "Past" : loadError ? "Unavailable" : "Checking"}
                                             </p>
                                         ) : (
                                             <p
@@ -638,7 +691,7 @@ export default function AvailabilityPage() {
 
                                     {/* Hover arrow */}
 
-                                    {!booked && (
+                                    {!unavailable && (
                                         <div
                                             className="
                         absolute
@@ -706,6 +759,10 @@ export default function AvailabilityPage() {
                     setEmail={setEmail}
                     setLocation={setLocation}
                     onClose={closeModal}
+                    onSubmit={submitBooking}
+                    submitting={submitting}
+                    error={submitError}
+                    unavailable={selectionHasBookedDates(selectedStart, selectedEnd)}
                     onStartChange={(value) => {
                         setSelectedStart(value);
                         setSelectedEnd(null);
@@ -763,6 +820,10 @@ function DateModal({
     setEmail,
     setLocation,
     onClose,
+    onSubmit,
+    submitting,
+    error,
+    unavailable,
     onStartChange,
     onEndChange,
 }: {
@@ -776,6 +837,10 @@ function DateModal({
     setEmail: (value: string) => void;
     setLocation: (value: string) => void;
     onClose: () => void;
+    onSubmit: () => void;
+    submitting: boolean;
+    error: string;
+    unavailable: boolean;
     onStartChange: (value: string) => void;
     onEndChange: (value: string) => void;
 }) {
@@ -977,25 +1042,24 @@ function DateModal({
                             !selectedStart ||
                             !selectedEnd ||
                             !guestName ||
-                            !email
+                            !email ||
+                            submitting ||
+                            unavailable
                         }
-                        onClick={() => {
-                            /*
-                             * Connect this button to your backend,
-                             * email service, WhatsApp or enquiry API.
-                             */
-                            alert(
-                                "Thank you! Your wedding enquiry has been received."
-                            );
-                        }}
+                        onClick={onSubmit}
                     >
-                        Check these dates
-                        <ArrowRight size={14} />
+                        {submitting ? "Booking..." : "Book these dates"}
+                        {!submitting && <ArrowRight size={14} />}
                     </button>
 
+                    {error && <p role="alert" className="mt-3 text-center text-sm text-[#a45f57]">{error}</p>}
+                    {unavailable && (
+                        <p role="alert" className="mt-3 text-center text-sm text-[#a45f57]">
+                            This date range includes dates that have already been booked.
+                        </p>
+                    )}
                     <p className="mt-4 text-center text-[9px] text-black/30">
-                        No booking is confirmed until we personally
-                        confirm your dates.
+                        Your dates are reserved once this booking is submitted.
                     </p>
                 </div>
             </div>

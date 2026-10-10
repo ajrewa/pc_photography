@@ -4,6 +4,7 @@ import { env } from "../config/env.js";
 import adminRoutes from "./admin.routes.js";
 import contentRoutes from "./content.routes.js";
 import { getMedia } from "../controllers/media.controller.js";
+import availabilityRoutes from "./availability.routes.js";
 
 const router = Router();
 
@@ -17,6 +18,7 @@ router.get("/health", (_req, res) => {
 
 router.get("/media/*", getMedia);
 
+router.use("/availability", availabilityRoutes);
 router.use(contentRoutes);
 router.use("/admin", adminRoutes);
 
