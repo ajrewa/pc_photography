@@ -1,16 +1,14 @@
 import {
-  Heart,
   Clapperboard,
   UserRound,
   Users,
-  GraduationCap,
-  Presentation,
   Phone,
   CircleHelp,
   ShieldCheck,
   Star,
   CalendarDays,
   type LucideIcon,
+  Home,
 } from "lucide-react";
 
 export type NavItem = {
@@ -20,14 +18,12 @@ export type NavItem = {
 };
 
 export const navItems: NavItem[] = [
-  { label: "Home", href: "/", icon: Heart },
+  { label: "Home", href: "/", icon: Home },
   { label: "Films", href: "/films", icon: Clapperboard },
   { label: "Reviews", href: "/reviews", icon: Star },
   { label: "About", href: "/about", icon: UserRound },
   { label: "Crew", href: "/crew", icon: Users },
   { label: "Availability", href: "/availability", icon: CalendarDays },
-  // { label: "Workshop", href: "/workshop", icon: GraduationCap },
-  // { label: "Blog & Press", href: "/blog", icon: Presentation },
   { label: "Contact", href: "/contact", icon: Phone },
 ];
 
