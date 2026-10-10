@@ -3,8 +3,7 @@
 import { useMemo, useState } from "react";
 import { Plus, Trash2, Upload } from "lucide-react";
 import { ApiRequestError, uploadMedia } from "@/lib/services/admin.service";
-import type { FieldConfig } from "@/lib/adminConfig";
-import type { FilmReview } from "@/lib/content";
+import type { FieldConfig, FilmReview } from "@/lib/types";
 
 type Props = {
   field: FieldConfig;

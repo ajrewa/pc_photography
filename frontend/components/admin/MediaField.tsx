@@ -3,7 +3,8 @@
 import { useRef, useState } from "react";
 import { ImagePlus, Trash2, Upload, Video } from "lucide-react";
 import { ApiRequestError, uploadMedia } from "@/lib/services/admin.service";
-import type { FieldConfig } from "@/lib/adminConfig";
+import { AdminFieldKind } from "@/lib/enums";
+import type { FieldConfig } from "@/lib/types";
 
 type Props = {
   field: FieldConfig;
@@ -22,7 +23,7 @@ export default function MediaField({ field, value, passcode, error, onChange, on
   const inputRef = useRef<HTMLInputElement>(null);
   const [progress, setProgress] = useState<number | null>(null);
   const [uploadError, setUploadError] = useState("");
-  const isVideo = field.kind === "video";
+  const isVideo = field.kind === AdminFieldKind.Video;
   const uploading = progress !== null;
 
 

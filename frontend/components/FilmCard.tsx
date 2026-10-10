@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Play } from "lucide-react";
-import type { ContentFilm } from "@/lib/content";
+import { VideoType } from "@/lib/enums";
+import type { ContentFilm } from "@/lib/types";
 
 export default function FilmCard({ film }: { film: ContentFilm }) {
   return (
@@ -26,7 +27,7 @@ export default function FilmCard({ film }: { film: ContentFilm }) {
           />
           <span className="sr-only">View wedding story</span>
         </Link>
-        {film.videoUrl && film.videoType === "file" && (
+        {film.videoUrl && film.videoType === VideoType.File && (
           <video
             src={film.videoUrl}
             poster={film.thumbnail || film.image}

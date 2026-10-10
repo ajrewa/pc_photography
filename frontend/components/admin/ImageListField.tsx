@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { ImagePlus, Upload } from "lucide-react";
 import { ApiRequestError, uploadMedia } from "@/lib/services/admin.service";
-import type { FieldConfig } from "@/lib/adminConfig";
+import type { FieldConfig } from "@/lib/types";
 
 type Props = {
   field: FieldConfig;

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { adminRequest, ApiRequestError } from "@/lib/services/admin.service";
-import type { AdminItem, SectionConfig } from "@/lib/adminConfig";
+import type { AdminItem, SectionConfig } from "@/lib/types";
 import ItemForm from "./ItemForm";
 
 type Props = {

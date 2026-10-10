@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import SectionHeading from "./SectionHeading";
-import type { GratitudeNote } from "@/lib/content";
+import type { GratitudeNote } from "@/lib/types";
 
 type Props = {
   notes?: GratitudeNote[] | null;

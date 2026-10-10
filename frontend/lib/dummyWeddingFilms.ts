@@ -1,17 +1,7 @@
 
-export type WeddingFilm = {
-  id: string;
-  couple: string;
-  slug: string;
-  location: string;
-  city: string;
-  state: string;
-  date: string;
-  latitude: number;
-  longitude: number;
-  image: string;
-  filmUrl: string;
-};
+import type { WeddingFilm } from "@/lib/types";
+
+export type { WeddingFilm } from "@/lib/types";
 
 export const dummyWeddingFilms: WeddingFilm[] = [
   {

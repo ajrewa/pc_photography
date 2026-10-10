@@ -3,11 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { adminRequest, ApiRequestError } from "@/lib/services/admin.service";
-import type { AdminItem, SectionConfig } from "@/lib/adminConfig";
+import { AdminFieldKind } from "@/lib/enums";
+import type { AdminItem, FilmReview, SectionConfig } from "@/lib/types";
 import MediaField from "./MediaField";
 import ImageListField from "./ImageListField";
 import FilmReviewsField from "./FilmReviewsField";
-import type { FilmReview } from "@/lib/content";
 
 type Props = {
   section: SectionConfig;
@@ -39,10 +39,10 @@ export default function ItemForm({ section, item, categories, passcode, onSaved,
     Object.fromEntries(
       section.fields.map((field) => {
         const current = item?.[field.name];
-        if (field.kind === "image-list" && Array.isArray(current)) {
+        if (field.kind === AdminFieldKind.ImageList && Array.isArray(current)) {
           return [field.name, current.join("\n")];
         }
-        if (field.kind === "film-reviews" && Array.isArray(current)) {
+        if (field.kind === AdminFieldKind.FilmReviews && Array.isArray(current)) {
           return [field.name, JSON.stringify(current)];
         }
         return [field.name, current === undefined || current === null ? "" : String(current)];
@@ -65,12 +65,12 @@ export default function ItemForm({ section, item, categories, passcode, onSaved,
   function setValue(name: string, next: string) {
     const previous = values[name];
     const field = section.fields.find((entry) => entry.name === name);
-    if (field?.kind === "image-list") {
+    if (field?.kind === AdminFieldKind.ImageList) {
       const nextUrls = new Set(next.split(/\r?\n/).map((url) => url.trim()).filter(Boolean));
       previous.split(/\r?\n/).map((url) => url.trim()).filter(Boolean).forEach((url) => {
         if (!nextUrls.has(url)) discard(url);
       });
-    } else if (field?.kind === "film-reviews") {
+    } else if (field?.kind === AdminFieldKind.FilmReviews) {
       const nextReviewImages = new Set(parseFilmReviews(next).map((review) => review.image).filter(Boolean));
       parseFilmReviews(previous).map((review) => review.image).filter((url): url is string => Boolean(url)).forEach((url) => {
         if (!nextReviewImages.has(url)) discard(url);
@@ -111,9 +111,9 @@ export default function ItemForm({ section, item, categories, passcode, onSaved,
       const body = Object.fromEntries(
         section.fields.map((field) => [
           field.name,
-          field.kind === "image-list"
+          field.kind === AdminFieldKind.ImageList
             ? values[field.name].split(/\r?\n/).map((url) => url.trim()).filter(Boolean)
-            : field.kind === "film-reviews"
+            : field.kind === AdminFieldKind.FilmReviews
               ? parseFilmReviews(values[field.name])
             : values[field.name],
         ])
@@ -165,7 +165,7 @@ export default function ItemForm({ section, item, categories, passcode, onSaved,
               const value = values[field.name] ?? "";
               const error = errors[field.name];
 
-              if (field.kind === "image-list") {
+              if (field.kind === AdminFieldKind.ImageList) {
                 return (
                   <ImageListField
                     key={field.name}
@@ -181,7 +181,7 @@ export default function ItemForm({ section, item, categories, passcode, onSaved,
                 );
               }
 
-              if (field.kind === "film-reviews") {
+              if (field.kind === AdminFieldKind.FilmReviews) {
                 return (
                   <FilmReviewsField
                     key={field.name}
@@ -197,7 +197,7 @@ export default function ItemForm({ section, item, categories, passcode, onSaved,
                 );
               }
 
-              if (field.kind === "image" || field.kind === "video") {
+              if (field.kind === AdminFieldKind.Image || field.kind === AdminFieldKind.Video) {
                 return (
                   <MediaField
                     key={field.name}
@@ -218,7 +218,7 @@ export default function ItemForm({ section, item, categories, passcode, onSaved,
                     {field.label}
                     {field.required && <span className="text-ember"> *</span>}
                   </label>
-                  {field.kind === "textarea" ? (
+                  {field.kind === AdminFieldKind.Textarea ? (
                     <textarea
                       id={`field-${field.name}`}
                       value={value}
@@ -232,8 +232,8 @@ export default function ItemForm({ section, item, categories, passcode, onSaved,
                   ) : (
                     <input
                       id={`field-${field.name}`}
-                      type={field.kind === "number" ? "number" : "text"}
-                      step={field.kind === "number" ? "any" : undefined}
+                      type={field.kind === AdminFieldKind.Number ? "number" : "text"}
+                      step={field.kind === AdminFieldKind.Number ? "any" : undefined}
                       value={value}
                       required={field.required}
                       autoFocus={index === 0}
