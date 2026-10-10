@@ -1,11 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight, Film as FilmIcon } from "lucide-react";
-import { useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ArrowUpRight, Film as FilmIcon, Search, X } from "lucide-react";
+import { Suspense, useEffect, useState, type FormEvent } from "react";
 import FilmCard from "@/components/FilmCard";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchContent } from "@/lib/store/contentSlice";
+
+function normalizeSearchText(value: string) {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
 
 function routePart(value: string) {
   return value
@@ -17,16 +28,43 @@ function routePart(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-export default function Films() {
+function FilmsContent() {
   const dispatch = useAppDispatch();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { data: content, loading, error } = useAppSelector((state) => state.content);
+  const searchQuery = searchParams.get("search")?.trim() ?? "";
+  const [searchInput, setSearchInput] = useState(searchQuery);
 
   useEffect(() => {
     if (!content) void dispatch(fetchContent());
   }, [content, dispatch]);
 
+  useEffect(() => {
+    setSearchInput(searchQuery);
+  }, [searchQuery]);
+
   const films = content?.films ?? [];
-  const categories = Array.from(new Set(films.map((film) => film.category).filter(Boolean)));
+  const searchTerms = normalizeSearchText(searchQuery).split(/\s+/).filter(Boolean);
+  const filteredFilms = searchTerms.length
+    ? films.filter((film) => {
+        const searchableText = normalizeSearchText(
+          [film.couple, film.category, film.location].join(" "),
+        );
+        return searchTerms.every((term) => searchableText.includes(term));
+      })
+    : films;
+  const categories = Array.from(
+    new Set(filteredFilms.map((film) => film.category).filter(Boolean)),
+  );
+
+  function handleSearch(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const value = searchInput.trim();
+    router.push(value ? `/films?search=${encodeURIComponent(value)}` : "/films", {
+      scroll: false,
+    });
+  }
 
   return (
     <main className="min-h-screen text-[#0b0b0a]">
@@ -56,6 +94,49 @@ export default function Films() {
       </section>
 
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-8 lg:px-14">
+        <form
+          onSubmit={handleSearch}
+          role="search"
+          className="mx-auto mb-12 flex max-w-2xl items-center gap-3 rounded-full border border-[#0b0b0a]/15 bg-white px-5 py-2 shadow-sm focus-within:border-[#0b0b0a]/40"
+        >
+          <Search className="h-4 w-4 shrink-0 text-[#0b0b0a]/50" aria-hidden="true" />
+          <input
+            type="search"
+            value={searchInput}
+            onChange={(event) => setSearchInput(event.target.value)}
+            placeholder="Search by couple, bride or groom, wedding type, or location"
+            aria-label="Search films by couple, bride or groom, wedding type, or location"
+            className="min-w-0 flex-1 bg-transparent py-2 text-sm outline-none placeholder:text-[#0b0b0a]/40"
+          />
+          {searchInput && (
+            <button
+              type="button"
+              aria-label="Clear search"
+              onClick={() => {
+                setSearchInput("");
+                router.push("/films", { scroll: false });
+              }}
+              className="rounded-full p-1 text-[#0b0b0a]/50 transition hover:bg-[#0b0b0a]/5 hover:text-[#0b0b0a]"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+          <button
+            type="submit"
+            className="rounded-full bg-[#0b0b0a] px-5 py-2 text-[10px] font-semibold uppercase tracking-widest text-white transition hover:bg-[#333]"
+          >
+            Search
+          </button>
+        </form>
+
+        {searchQuery && !loading && !error && (
+          <p className="mb-8 text-center text-sm text-[#0b0b0a]/60" aria-live="polite">
+            {filteredFilms.length
+              ? `${filteredFilms.length} ${filteredFilms.length === 1 ? "film" : "films"} found for “${searchQuery}”`
+              : `No films found for “${searchQuery}”. Try another name, wedding type, or location.`}
+          </p>
+        )}
+
         {loading && !content ? (
           <p className="py-20 text-center text-sm text-stone">Loading films…</p>
         ) : error ? (
@@ -70,10 +151,12 @@ export default function Films() {
             </button>
           </div>
         ) : categories.length === 0 ? (
-          <p className="py-20 text-center font-display text-2xl text-stone">Films are coming soon.</p>
+          <p className="py-20 text-center font-display text-2xl text-stone">
+            {searchQuery ? "Try another search to discover a wedding film." : "Films are coming soon."}
+          </p>
         ) : (
           categories.map((category) => {
-            const categoryFilms = films.filter((film) => film.category === category);
+            const categoryFilms = filteredFilms.filter((film) => film.category === category);
             const categoryPath = routePart(category);
 
             return (
@@ -106,5 +189,13 @@ export default function Films() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function Films() {
+  return (
+    <Suspense fallback={<p className="py-20 text-center text-sm text-stone">Loading films…</p>}>
+      <FilmsContent />
+    </Suspense>
   );
 }
