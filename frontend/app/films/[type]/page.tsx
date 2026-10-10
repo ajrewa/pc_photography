@@ -131,7 +131,7 @@ export default function FilmTypePage() {
           {bannerVideoUrl && film.videoType === VideoType.File ? (
             <video
               src={bannerVideoUrl}
-              // poster={film.image}
+              poster={film.image}
               autoPlay
               muted
               loop

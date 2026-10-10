@@ -180,7 +180,7 @@ export default function FloatingSearch() {
                   ref={inputRef}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search wedding films..."
+                  placeholder="Couple, names, wedding type, or place..."
                   className="w-full bg-transparent text-base font-medium text-ink outline-none placeholder:text-ink/40"
                 />
               </div>

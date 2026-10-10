@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ArrowRight, X, Menu as MenuIcon, ShieldCheck } from "lucide-react";
-import { navItems, faqItem, adminItem } from "@/lib/nav";
+import { usePathname, useRouter } from "next/navigation";
+import { ArrowRight, X, Menu as MenuIcon } from "lucide-react";
+import { navItems, faqItem } from "@/lib/nav";
 import Logo from "./Logo";
 import FloatingSearch from "./FloatingSearch";
 
@@ -26,11 +26,45 @@ function EnquireButton({ className = "" }: { className?: string }) {
 
 export default function MainNav({ isAdmin }: { isAdmin: boolean }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    let previousKey = "";
+    let previousKeyAt = 0;
+
+    function handleAdminShortcut(event: KeyboardEvent) {
+      const target = event.target;
+      if (
+        event.ctrlKey ||
+        event.metaKey ||
+        event.altKey ||
+        (target instanceof HTMLElement &&
+          (target.isContentEditable || target.matches("input, textarea, select")))
+      ) {
+        previousKey = "";
+        return;
+      }
+
+      const key = event.key.toLowerCase();
+      const now = Date.now();
+      if (key === "c" && previousKey === "p" && now - previousKeyAt <= 1000) {
+        previousKey = "";
+        if (!isAdmin) router.push("/admin");
+        return;
+      }
+
+      previousKey = key === "p" ? key : "";
+      previousKeyAt = now;
+    }
+
+    window.addEventListener("keydown", handleAdminShortcut);
+    return () => window.removeEventListener("keydown", handleAdminShortcut);
+  }, [isAdmin, router]);
 
   useEffect(() => {
     document.documentElement.style.overflow = open ? "hidden" : "";
@@ -402,21 +436,11 @@ export default function MainNav({ isAdmin }: { isAdmin: boolean }) {
 
       {/* Top Header Floating Search for Desktop */}
       {!isAdmin && (
-        <>
-          <div className="fixed inset-x-0 top-0 z-30 hidden lg:left-[200px] lg:flex">
-            <div className="relative w-full overflow-hidden bg-paper shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
-              <FloatingSearch />
-            </div>
+        <div className="fixed inset-x-0 top-0 z-30 hidden lg:left-[200px] lg:flex">
+          <div className="relative w-full overflow-hidden bg-paper shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
+            <FloatingSearch />
           </div>
-
-          <Link
-            href="/admin"
-            className="fixed right-6 top-4 z-[70] hidden h-11 items-center gap-2 rounded-full border border-white/30 bg-white/70 px-4 text-xs font-medium text-ink shadow-[0_8px_30px_rgba(0,0,0,0.12)] backdrop-blur-xl transition-all duration-300 hover:scale-105 hover:bg-white lg:flex"
-          >
-            <ShieldCheck size={15} strokeWidth={1.8} />
-            Admin
-          </Link>
-        </>
+        </div>
       )}
 
       {/* =====================================================
@@ -461,7 +485,7 @@ export default function MainNav({ isAdmin }: { isAdmin: boolean }) {
         </div>
 
         <nav className="mt-6 flex flex-1 flex-col gap-2 overflow-y-auto min-h-0 pr-1">
-          {[...navItems, faqItem, adminItem].map((item) => {
+          {[...navItems, faqItem].map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);
             return (
