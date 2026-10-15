@@ -7,6 +7,7 @@ import { Suspense, useEffect, useState, type FormEvent } from "react";
 import FilmCard from "@/components/FilmCard";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchContent } from "@/lib/store/contentSlice";
+import { startRouteTransition } from "@/lib/navigation";
 
 function normalizeSearchText(value: string) {
   return value
@@ -61,7 +62,9 @@ function FilmsContent() {
   function handleSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const value = searchInput.trim();
-    router.push(value ? `/films?search=${encodeURIComponent(value)}` : "/films", {
+    const destination = value ? `/films?search=${encodeURIComponent(value)}` : "/films";
+    startRouteTransition(destination);
+    router.push(destination, {
       scroll: false,
     });
   }
@@ -114,6 +117,7 @@ function FilmsContent() {
               aria-label="Clear search"
               onClick={() => {
                 setSearchInput("");
+                startRouteTransition("/films");
                 router.push("/films", { scroll: false });
               }}
               className="rounded-full p-1 text-[#0b0b0a]/50 transition hover:bg-[#0b0b0a]/5 hover:text-[#0b0b0a]"

@@ -7,6 +7,7 @@ import ReviewPrompt from "@/components/ReviewPrompt";
 import { Provider } from "react-redux";
 import { store } from "@/lib/store";
 import Footer from "@/components/Footer";
+import RouteTransitionLoader from "@/components/RouteTransitionLoader";
 
 export default function ClientProviders({
     children,
@@ -20,6 +21,7 @@ export default function ClientProviders({
     return (
         <Provider store={store}>
         <SmoothScroll>
+            <RouteTransitionLoader />
             {!isAboutUs && !isAdmin && <MainNav isAdmin={isAdmin} />}
             {!isAdmin && <ReviewPrompt />}
             <div className={isAboutUs || isAdmin ? "" : "lg:pl-[200px]"}>

@@ -25,10 +25,6 @@ export default function ReviewsPage() {
   return (
     <main className="min-h-screen bg-paper px-5 pb-20 pt-12 text-ink sm:px-10 lg:px-16">
       <div className="mx-auto max-w-5xl">
-        <Link href="/" className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-stone transition hover:text-ink">
-          <ArrowLeft size={14} />
-          Home
-        </Link>
         <header className="mx-auto max-w-2xl py-12 text-center sm:py-16">
           <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-stone">Couples share their stories</p>
           <h1 className="mt-3 font-display text-5xl sm:text-6xl">Reviews &amp; ratings</h1>

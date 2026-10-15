@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { ArrowUpRight, Heart, MapPin, Play, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { startRouteTransition } from "@/lib/navigation";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
 import type { IndiaFilm } from "@/lib/types";
 import SectionHeading from "../SectionHeading";
@@ -23,7 +24,9 @@ export default function AroundIndia({ films }: Props) {
   const handleViewFilm = () => {
     if (!activeFilm?.filmUrl) return;
 
-    router.push(`/films/${activeFilm.slug}`);
+    const destination = `/films/${activeFilm.slug}`;
+    startRouteTransition(destination);
+    router.push(destination);
   };
 
   return (

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Search, X, ArrowUpRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { startRouteTransition } from "@/lib/navigation";
 
 export default function FloatingSearch() {
   const [open, setOpen] = useState(false);
@@ -44,7 +45,9 @@ export default function FloatingSearch() {
 
     setOpen(false);
 
-    router.push(`/films?search=${encodeURIComponent(value)}`);
+    const destination = `/films?search=${encodeURIComponent(value)}`;
+    startRouteTransition(destination);
+    router.push(destination);
   }
 
   return (
