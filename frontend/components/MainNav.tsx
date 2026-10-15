@@ -7,6 +7,7 @@ import { ArrowRight, X, Menu as MenuIcon } from "lucide-react";
 import { navItems, faqItem } from "@/lib/nav";
 import Logo from "./Logo";
 import FloatingSearch from "./FloatingSearch";
+import { startRouteTransition } from "@/lib/navigation";
 
 function EnquireButton({ className = "" }: { className?: string }) {
   return (
@@ -54,7 +55,10 @@ export default function MainNav({ isAdmin }: { isAdmin: boolean }) {
       const now = Date.now();
       if (key === "c" && previousKey === "p" && now - previousKeyAt <= 1000) {
         previousKey = "";
-        if (!isAdmin) router.push("/admin");
+        if (!isAdmin) {
+          startRouteTransition("/admin");
+          router.push("/admin");
+        }
         return;
       }
 
