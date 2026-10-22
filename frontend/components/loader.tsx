@@ -66,6 +66,7 @@ export default function Loader({ show = true, label = "Loading" }: PcLoaderProps
           width={160}
           height={101}
           priority
+          unoptimized
           draggable={false}
           className="pointer-events-none h-auto w-36 animate-pulse motion-reduce:animate-none"
         />
